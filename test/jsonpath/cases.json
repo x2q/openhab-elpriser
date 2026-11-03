@@ -1,0 +1,232 @@
+[
+ {
+  "name": "L1 price now",
+  "file": "prices.json",
+  "expr": "$.current_price",
+  "expect": "2.706"
+ },
+ {
+  "name": "L1 current hour",
+  "file": "prices.json",
+  "expr": "$.current_hour",
+  "expect": "9"
+ },
+ {
+  "name": "L1 date",
+  "file": "prices.json",
+  "expr": "$.date",
+  "expect": "2026-11-03"
+ },
+ {
+  "name": "L1 today min",
+  "file": "prices.json",
+  "expr": "$..price.min()",
+  "expect": "2.209"
+ },
+ {
+  "name": "L1 today max",
+  "file": "prices.json",
+  "expr": "$..price.max()",
+  "expect": "3.0903"
+ },
+ {
+  "name": "L1 today avg",
+  "file": "prices.json",
+  "expr": "$..price.avg()",
+  "expect": "2.5224416666666665"
+ },
+ {
+  "name": "L1 today list",
+  "file": "prices.json",
+  "expr": "$.prices[*].price",
+  "expect": "",
+  "startsWith": "[2.209, 2.2237, 2.22, 2.2411, 2.257"
+ },
+ {
+  "name": "L1 price at hour 5",
+  "file": "prices.json",
+  "expr": "$.prices[?(@.hour == 5)].price",
+  "expect": "2.2548"
+ },
+ {
+  "name": "L1 cheap now (switch)",
+  "file": "sched.json",
+  "expr": "$.on_now",
+  "expect": "false"
+ },
+ {
+  "name": "L1 cheap hours",
+  "file": "sched.json",
+  "expr": "$.schedule[?(@.on == true)].hour",
+  "expect": "[0, 1, 2, 3]"
+ },
+ {
+  "name": "L1 the cheapest hour",
+  "file": "sched1.json",
+  "expr": "$.schedule[?(@.on == true)].hour",
+  "expect": "0"
+ },
+ {
+  "name": "L1 tomorrow type",
+  "file": "dk1_fc.json",
+  "expr": "$.days[1].type",
+  "expect": "forecast"
+ },
+ {
+  "name": "L1 tomorrow list",
+  "file": "dk1_fc.json",
+  "expr": "$.days[1].prices[*].price",
+  "expect": "",
+  "startsWith": "[1.8712, 1.8484, 1.851, 1.8555"
+ },
+ {
+  "name": "L1 grid company price",
+  "file": "dk2_net.json",
+  "expr": "$.days[0].prices[?(@.hour==8)].price",
+  "expect": "3.5928"
+ },
+ {
+  "name": "L1 a path that is not there is an error (channel keeps its value)",
+  "file": "prices.json",
+  "expr": "$.nothing",
+  "expect": "ERROR: Invalid path '$.nothing'"
+ },
+ {
+  "name": "L2 summary price_now",
+  "file": "summary-dk1.json",
+  "expr": "$.price_now",
+  "expect": "2.3166"
+ },
+ {
+  "name": "L2 summary price_next",
+  "file": "summary-dk1.json",
+  "expr": "$.price_next",
+  "expect": "2.2758"
+ },
+ {
+  "name": "L2 summary level",
+  "file": "summary-dk1.json",
+  "expr": "$.level",
+  "expect": "cheap"
+ },
+ {
+  "name": "L2 summary unit",
+  "file": "summary-dk1.json",
+  "expr": "$.unit",
+  "expect": "DKK/kWh"
+ },
+ {
+  "name": "L2 summary today_min",
+  "file": "summary-dk1.json",
+  "expr": "$.today_min",
+  "expect": "2.209"
+ },
+ {
+  "name": "L2 summary today_max",
+  "file": "summary-dk1.json",
+  "expr": "$.today_max",
+  "expect": "3.0903"
+ },
+ {
+  "name": "L2 summary today_avg",
+  "file": "summary-dk1.json",
+  "expr": "$.today_avg",
+  "expect": "2.52244"
+ },
+ {
+  "name": "L2 summary cheap_now",
+  "file": "summary-dk1.json",
+  "expr": "$.cheap_now",
+  "expect": "ON"
+ },
+ {
+  "name": "L2 summary cheap_next_start",
+  "file": "summary-dk1.json",
+  "expr": "$.cheap_next_start",
+  "expect": "2026-11-03T11:00:00.000+0000"
+ },
+ {
+  "name": "L2 summary cheapest_start",
+  "file": "summary-dk1.json",
+  "expr": "$.cheapest_start",
+  "expect": "2026-11-02T23:00:00.000+0000"
+ },
+ {
+  "name": "L2 summary run_start",
+  "file": "summary-dk1.json",
+  "expr": "$.run_start",
+  "expect": "2026-11-03T10:00:00.000+0000"
+ },
+ {
+  "name": "L2 summary run_now",
+  "file": "summary-dk1.json",
+  "expr": "$.run_now",
+  "expect": "ON"
+ },
+ {
+  "name": "L2 summary tomorrow_published",
+  "file": "summary-dk1.json",
+  "expr": "$.tomorrow_published",
+  "expect": "OFF"
+ },
+ {
+  "name": "L2 summary stale",
+  "file": "summary-dk1.json",
+  "expr": "$.stale",
+  "expect": "OFF"
+ },
+ {
+  "name": "L2 summary hour_start",
+  "file": "summary-dk1.json",
+  "expr": "$.hour_start",
+  "expect": "2026-11-03T10:00:00.000+0000"
+ },
+ {
+  "name": "L2 summary price_type",
+  "file": "summary-dk1.json",
+  "expr": "$.price_type",
+  "expect": "actual"
+ },
+ {
+  "name": "L2 DE unit",
+  "file": "summary-de.json",
+  "expr": "$.unit",
+  "expect": "EUR/kWh"
+ },
+ {
+  "name": "L2 GB without a price: UNDEF",
+  "file": "summary-gb-late.json",
+  "expr": "$.price_now",
+  "expect": "UNDEF"
+ },
+ {
+  "name": "L2 GB level UNDEF",
+  "file": "summary-gb-late.json",
+  "expr": "$.level",
+  "expect": "UNDEF"
+ },
+ {
+  "name": "L2 summary priciest_start",
+  "file": "summary-dk1.json",
+  "expr": "$.priciest_start",
+  "expect": "2026-11-03T16:00:00.000+0000"
+ },
+ {
+  "name": "L2 summary cheap_forecast_based",
+  "file": "summary-dk1.json",
+  "expr": "$.cheap_forecast_based",
+  "expect": "OFF"
+ },
+ {
+  "name": "L2 summary run_end",
+  "file": "summary-dk1.json",
+  "expr": "$.run_end",
+  "expect": "2026-11-03T13:00:00.000+0000"
+ },
+ {
+  "name": "L2 summary run_avg",
+  "file": "summary-dk1.json",
+  "expr": "$.run_avg",
+  "expect": "2.30583"
+ }
+]

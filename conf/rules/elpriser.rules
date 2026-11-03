@@ -1,0 +1,70 @@
+// elpriser.org for openHAB: works out "now" from the hourly price list (Elpriser_Slots) at every full hour.
+//
+// Settings: the arguments of the JS transformation (see transform/elpriser.js)
+//   cheap=4      the N cheapest hours ...
+//   horizon=24   ... of the next H hours (scope=today: the zone's calendar day instead)
+//   run=3        length of the cheapest run of hours in a row
+//   forecast=0   1 also lets the model-forecast hours count (not yet published prices; NOT an official forecast)
+//   maxprice=    optional price limit per kWh
+val String SUMMARY = "elpriser.js?fn=summary&cheap=4&horizon=24&run=3&forecast=0"
+val String PRICELIST = "elpriser.js?fn=list&hours=48&forecast=1"
+
+rule "Elpriser: update prices"
+when
+    System started or
+    Item Elpriser_Slots changed or
+    Time cron "20 0 * * * ?"
+then
+    val slots = Elpriser_Slots.state.toString
+    if (slots === null || slots == "NULL" || slots == "UNDEF") {
+        return;
+    }
+
+    val s = transform("JS", SUMMARY, slots)
+    if (s === null) {
+        logWarn("elpriser", "the JS transformation returned nothing: is the JavaScript Scripting add-on installed and elpriser.js in transform/?")
+        return;
+    }
+
+    Elpriser_Price_Now.postUpdate(transform("JSONPATH", "$.price_now", s))
+    Elpriser_Price_Next.postUpdate(transform("JSONPATH", "$.price_next", s))
+    Elpriser_Price_Type.postUpdate(transform("JSONPATH", "$.price_type", s))
+    Elpriser_Level.postUpdate(transform("JSONPATH", "$.level", s))
+    Elpriser_Unit.postUpdate(transform("JSONPATH", "$.unit", s))
+    Elpriser_Stale.postUpdate(transform("JSONPATH", "$.stale", s))
+
+    Elpriser_Today_Min.postUpdate(transform("JSONPATH", "$.today_min", s))
+    Elpriser_Today_Max.postUpdate(transform("JSONPATH", "$.today_max", s))
+    Elpriser_Today_Avg.postUpdate(transform("JSONPATH", "$.today_avg", s))
+    Elpriser_Cheapest_Hour.postUpdate(transform("JSONPATH", "$.cheapest_start", s))
+    Elpriser_Priciest_Hour.postUpdate(transform("JSONPATH", "$.priciest_start", s))
+
+    Elpriser_Cheap_Now.postUpdate(transform("JSONPATH", "$.cheap_now", s))
+    Elpriser_Cheap_Next_Start.postUpdate(transform("JSONPATH", "$.cheap_next_start", s))
+    Elpriser_Cheap_Forecast.postUpdate(transform("JSONPATH", "$.cheap_forecast_based", s))
+
+    Elpriser_Run_Start.postUpdate(transform("JSONPATH", "$.run_start", s))
+    Elpriser_Run_End.postUpdate(transform("JSONPATH", "$.run_end", s))
+    Elpriser_Run_Avg.postUpdate(transform("JSONPATH", "$.run_avg", s))
+    Elpriser_Run_Now.postUpdate(transform("JSONPATH", "$.run_now", s))
+
+    Elpriser_Tomorrow_Published.postUpdate(transform("JSONPATH", "$.tomorrow_published", s))
+
+    val l = transform("JS", PRICELIST, slots)
+    if (l !== null) {
+        Elpriser_Forecast_JSON.postUpdate(l)
+    }
+end
+
+// Example: run a device in the cheap hours. Replace Dishwasher_Power with your own switch.
+//
+// rule "Elpriser: dishwasher in the cheap hours"
+// when
+//     Item Elpriser_Cheap_Now changed
+// then
+//     if (Elpriser_Cheap_Now.state == ON) {
+//         Dishwasher_Power.sendCommand(ON)
+//     } else {
+//         Dishwasher_Power.sendCommand(OFF)
+//     }
+// end

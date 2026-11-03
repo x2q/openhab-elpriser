@@ -1,0 +1,66 @@
+// elpriser.org for openHAB - Denmark with plain JSONPATH (no add-on except the HTTP binding and the JSONPath
+// transformation). Prices are DKK/kWh. See the README, part 1.
+//
+// Zone: change DK1 to DK2 (Eastern Denmark) in every URL.
+// Price type (mode=): inkl_alt = spot + Energinet tariffs + electricity duty + VAT ("Din pris" without grid company);
+//   net_inkl_alt = the full price incl. your grid company's tariff, add &gln=<13 digits>, e.g.
+//   https://elpriser.org/api/prices?area=DK2&mode=net_inkl_alt&gln=5790000705689 (Radius). List: https://elpriser.org/tariffer
+//   spot_inkl / spot_ex = spot price with / without VAT.
+//
+// The service answers /api/now, /api/prices and /api/schedule from a cache that is renewed at every full hour,
+// so polling every 5 minutes is cheap and the price is correct within minutes after the hour.
+
+Thing http:url:elpriser_dk_prices "Elpriser DK1 today" [
+    baseURL="https://elpriser.org/api/prices?area=DK1&mode=inkl_alt",
+    refresh=300,
+    timeout=15000,
+    headers="User-Agent=openhab-elpriser/0.1"
+] {
+    Channels:
+        Type number : price_now "Price now"           [ stateTransformation="JSONPATH($.current_price)", mode="READONLY" ]
+        Type number : hour      "Current hour"        [ stateTransformation="JSONPATH($.current_hour)", mode="READONLY" ]
+        Type number : today_min "Today's lowest"      [ stateTransformation="JSONPATH($..price.min())", mode="READONLY" ]
+        Type number : today_max "Today's highest"     [ stateTransformation="JSONPATH($..price.max())", mode="READONLY" ]
+        Type number : today_avg "Today's average"     [ stateTransformation="JSONPATH($..price.avg())", mode="READONLY" ]
+        Type string : today_prices "Today's 24 prices" [ stateTransformation="JSONPATH($.prices[*].price)", mode="READONLY" ]
+}
+
+// The N cheapest hours of the day (hours=4). Other strategies: cheapest_pct&pct=25, avoid_expensive_n&hours=3,
+// avoid_peak, night_cheap, smart&max_off=3 - see https://elpriser.org/automation. For these the switch below is on while
+// the device may run.
+Thing http:url:elpriser_dk_cheap "Elpriser DK1 cheapest hours" [
+    baseURL="https://elpriser.org/api/schedule?area=DK1&mode=inkl_alt&strategy=cheapest_n&hours=4",
+    refresh=300,
+    timeout=15000,
+    headers="User-Agent=openhab-elpriser/0.1"
+] {
+    Channels:
+        Type switch : cheap_now   "Cheap hour now"  [ stateTransformation="JSONPATH($.on_now)", onValue="true", offValue="false", mode="READONLY" ]
+        Type string : cheap_hours "Cheap hours today" [ stateTransformation="JSONPATH($.schedule[?(@.on == true)].hour)", mode="READONLY" ]
+}
+
+// The single cheapest hour of today (hours=1).
+Thing http:url:elpriser_dk_cheapest1 "Elpriser DK1 cheapest hour" [
+    baseURL="https://elpriser.org/api/schedule?area=DK1&mode=inkl_alt&strategy=cheapest_n&hours=1",
+    refresh=3600,
+    timeout=15000,
+    headers="User-Agent=openhab-elpriser/0.1"
+] {
+    Channels:
+        Type number : cheapest_hour "Cheapest hour today" [ stateTransformation="JSONPATH($.schedule[?(@.on == true)].hour)", mode="READONLY" ]
+}
+
+// Tomorrow's 24 prices. Until the day-ahead prices are published (about 13:00) they are elpriser.org's own
+// statistical model, NOT an official forecast; tomorrow_type says "forecast" or "actual".
+// Note: day [1] is tomorrow only if the cached answer is from today; in the first half hour after midnight it can
+// still be the day before (part 1 of the README). Part 2 (JS transformation) does not have this limit.
+Thing http:url:elpriser_dk_tomorrow "Elpriser DK1 tomorrow" [
+    baseURL="https://elpriser.org/api/forecast?area=DK1&mode=inkl_alt",
+    refresh=3600,
+    timeout=15000,
+    headers="User-Agent=openhab-elpriser/0.1"
+] {
+    Channels:
+        Type string : tomorrow_type   "Tomorrow: actual or forecast" [ stateTransformation="JSONPATH($.days[1].type)", mode="READONLY" ]
+        Type string : tomorrow_prices "Tomorrow's 24 prices"          [ stateTransformation="JSONPATH($.days[1].prices[*].price)", mode="READONLY" ]
+}

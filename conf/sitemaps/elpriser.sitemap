@@ -1,0 +1,29 @@
+sitemap elpriser label="Elpriser" {
+    Frame label="Right now" {
+        Text item=Elpriser_Price_Now valuecolor=[Elpriser_Level=="cheap"="green", Elpriser_Level=="expensive"="red"]
+        Text item=Elpriser_Price_Next
+        Text item=Elpriser_Level
+        Text item=Elpriser_Cheap_Now
+        Text item=Elpriser_Run_Now
+    }
+    Frame label="Today" {
+        Text item=Elpriser_Today_Min
+        Text item=Elpriser_Today_Max
+        Text item=Elpriser_Today_Avg
+        Text item=Elpriser_Cheapest_Hour
+        Text item=Elpriser_Priciest_Hour
+    }
+    Frame label="Plan" {
+        Text item=Elpriser_Cheap_Next_Start
+        Text item=Elpriser_Run_Start
+        Text item=Elpriser_Run_End
+        Text item=Elpriser_Run_Avg
+        Text item=Elpriser_Tomorrow_Published
+        Text item=Elpriser_Cheap_Forecast visibility=[Elpriser_Cheap_Forecast==ON]
+    }
+    Frame label="Data" {
+        Text item=Elpriser_Unit
+        Text item=Elpriser_Price_Type
+        Text item=Elpriser_Stale visibility=[Elpriser_Stale==ON]
+    }
+}

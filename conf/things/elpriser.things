@@ -1,0 +1,27 @@
+// elpriser.org for openHAB - all 40 price zones with the HTTP binding, the JS transformation and a rule.
+// See the README, part 2. Needs the add-ons: HTTP Binding, JSONPath Transformation, JavaScript Scripting.
+//
+// Pick ONE baseURL (zone), the rest of the package follows the zone's currency:
+//
+//   Denmark, price you pay ("Din pris" = spot + Energinet tariffs + electricity duty + VAT), DKK/kWh:
+//       https://elpriser.org/api/forecast?area=DK1&mode=inkl_alt          (DK2 for Eastern Denmark)
+//   Denmark with your grid company's tariff (full price), 13-digit GLN from https://elpriser.org/tariffer:
+//       https://elpriser.org/api/forecast?area=DK2&mode=net_inkl_alt&gln=5790000705689
+//   Any other zone (wholesale day-ahead price, no VAT/taxes/grid fees), in the zone's currency:
+//       https://elpriser.org/api/nordic?zone=de
+//       zones: dk1 dk2 no1 no2 no3 no4 no5 se1 se2 se3 se4 fi nl de fr pl it-n at be ch cz hu si es pt sk gr ro bg hr rs
+//              ee lv lt me mk al xk gb ie
+//   The same zone in EUR: keep the URL and use JS(elpriser.js?fn=slots&cur=eur) below.
+//
+// refresh=3600: one request per hour. The answer holds today, tomorrow once it is published (about 13:00 CET) and
+// the forecast days, so "price now" is worked out locally by the rule at every full hour.
+
+Thing http:url:elpriser "Elpriser.org" [
+    baseURL="https://elpriser.org/api/forecast?area=DK1&mode=inkl_alt",
+    refresh=3600,
+    timeout=15000,
+    headers="User-Agent=openhab-elpriser/0.1"
+] {
+    Channels:
+        Type string : slots "Hourly price slots (compact JSON)" [ stateTransformation="JS(elpriser.js?fn=slots)", mode="READONLY" ]
+}

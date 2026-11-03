@@ -1,0 +1,79 @@
+[
+ {
+  "name": "price now",
+  "file": "prices.json",
+  "expr": "$.current_price",
+  "expect": "",
+  "regex": "-?\\d+(\\.\\d+)?"
+ },
+ {
+  "name": "current hour",
+  "file": "prices.json",
+  "expr": "$.current_hour",
+  "expect": "",
+  "regex": "\\d{1,2}"
+ },
+ {
+  "name": "today min",
+  "file": "prices.json",
+  "expr": "$..price.min()",
+  "expect": "",
+  "regex": "-?\\d+(\\.\\d+)?"
+ },
+ {
+  "name": "today max",
+  "file": "prices.json",
+  "expr": "$..price.max()",
+  "expect": "",
+  "regex": "-?\\d+(\\.\\d+)?"
+ },
+ {
+  "name": "today avg",
+  "file": "prices.json",
+  "expr": "$..price.avg()",
+  "expect": "",
+  "regex": "-?\\d+(\\.\\d+)?"
+ },
+ {
+  "name": "today list (24 numbers)",
+  "file": "prices.json",
+  "expr": "$.prices[*].price",
+  "expect": "",
+  "regex": "\\[(-?\\d+(\\.\\d+)?, ){22,24}-?\\d+(\\.\\d+)?\\]"
+ },
+ {
+  "name": "cheap now switch",
+  "file": "sched.json",
+  "expr": "$.on_now",
+  "expect": "",
+  "regex": "true|false"
+ },
+ {
+  "name": "cheap hours",
+  "file": "sched.json",
+  "expr": "$.schedule[?(@.on == true)].hour",
+  "expect": "",
+  "regex": "\\[(\\d{1,2}, ){3}\\d{1,2}\\]"
+ },
+ {
+  "name": "the cheapest hour",
+  "file": "sched1.json",
+  "expr": "$.schedule[?(@.on == true)].hour",
+  "expect": "",
+  "regex": "\\d{1,2}"
+ },
+ {
+  "name": "forecast: second day type",
+  "file": "forecast.json",
+  "expr": "$.days[1].type",
+  "expect": "",
+  "regex": "actual|forecast"
+ },
+ {
+  "name": "forecast: second day list",
+  "file": "forecast.json",
+  "expr": "$.days[1].prices[*].price",
+  "expect": "",
+  "regex": "\\[(-?\\d+(\\.\\d+)?, )+-?\\d+(\\.\\d+)?\\]"
+ }
+]

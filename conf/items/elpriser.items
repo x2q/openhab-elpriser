@@ -1,0 +1,35 @@
+// Items for elpriser.things and elpriser.rules. Change "DKK" in the labels to your zone's currency.
+// Elpriser_Slots holds the compact price list the rule works on: keep it out of persistence and charts.
+Group gElpriser "Elpriser" <energy>
+
+String Elpriser_Slots "Price slots (internal)" <energy> { channel="http:url:elpriser:slots" }
+
+// Right now
+Number   Elpriser_Price_Now    "Price now [%.3f DKK/kWh]"      <energy> (gElpriser)
+Number   Elpriser_Price_Next   "Price next hour [%.3f DKK/kWh]" <energy> (gElpriser)
+String   Elpriser_Price_Type   "Price is [%s]"                 <energy> (gElpriser)
+String   Elpriser_Level        "Level today [%s]"              <energy> (gElpriser)
+String   Elpriser_Unit         "Unit [%s]"                     <energy> (gElpriser)
+Switch   Elpriser_Stale        "Last complete hour shown (GB)" <energy> (gElpriser)
+
+// Today (the zone's calendar day)
+Number   Elpriser_Today_Min    "Today's lowest [%.3f DKK/kWh]"  <energy> (gElpriser)
+Number   Elpriser_Today_Max    "Today's highest [%.3f DKK/kWh]" <energy> (gElpriser)
+Number   Elpriser_Today_Avg    "Today's average [%.3f DKK/kWh]" <energy> (gElpriser)
+DateTime Elpriser_Cheapest_Hour "Cheapest hour today [%1$tH:%1$tM]" <time> (gElpriser)
+DateTime Elpriser_Priciest_Hour "Dearest hour today [%1$tH:%1$tM]"  <time> (gElpriser)
+
+// The N cheapest hours of the next H hours (see elpriser.rules: cheap=4, horizon=24)
+Switch   Elpriser_Cheap_Now        "Cheap hour now"                   <switch> (gElpriser)
+DateTime Elpriser_Cheap_Next_Start "Next cheap hour [%1$tH:%1$tM]"    <time>   (gElpriser)
+Switch   Elpriser_Cheap_Forecast   "Cheap hours use model forecast"   <energy> (gElpriser)
+
+// The cheapest run of R hours in a row (run=3)
+DateTime Elpriser_Run_Start    "Cheapest run starts [%1$tH:%1$tM]"    <time>   (gElpriser)
+DateTime Elpriser_Run_End      "Cheapest run ends [%1$tH:%1$tM]"      <time>   (gElpriser)
+Number   Elpriser_Run_Avg      "Cheapest run average [%.3f DKK/kWh]"  <energy> (gElpriser)
+Switch   Elpriser_Run_Now      "In the cheapest run now"              <switch> (gElpriser)
+
+// Tomorrow and the forecast
+Switch   Elpriser_Tomorrow_Published "Tomorrow's prices published"    <calendar> (gElpriser)
+String   Elpriser_Forecast_JSON "Hourly prices, next 48 h (JSON)"     <energy> (gElpriser)

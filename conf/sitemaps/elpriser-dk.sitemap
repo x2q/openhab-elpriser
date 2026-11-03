@@ -1,0 +1,18 @@
+sitemap elpriser_dk label="Elpriser DK" {
+    Frame label="Right now" {
+        Text item=Elpriser_DK_Price_Now
+        Text item=Elpriser_DK_Cheap_Now
+        Text item=Elpriser_DK_Hour
+    }
+    Frame label="Today" {
+        Text item=Elpriser_DK_Today_Min
+        Text item=Elpriser_DK_Today_Max
+        Text item=Elpriser_DK_Today_Avg
+        Text item=Elpriser_DK_Cheapest_Hour
+        Text item=Elpriser_DK_Cheap_Hours
+    }
+    Frame label="Tomorrow" {
+        Text item=Elpriser_DK_Tomorrow_Type
+        Text item=Elpriser_DK_Tomorrow_Prices
+    }
+}

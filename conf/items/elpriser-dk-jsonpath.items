@@ -1,0 +1,16 @@
+// Items for elpriser-dk-jsonpath.things. Prices are DKK/kWh.
+Group gElpriserDK "Elpriser DK" <energy>
+
+Number Elpriser_DK_Price_Now     "Price now [%.3f DKK/kWh]"        <energy>   (gElpriserDK) { channel="http:url:elpriser_dk_prices:price_now" }
+Number Elpriser_DK_Hour          "Current hour [%d]"               <time>     (gElpriserDK) { channel="http:url:elpriser_dk_prices:hour" }
+Number Elpriser_DK_Today_Min     "Today's lowest [%.3f DKK/kWh]"   <energy>   (gElpriserDK) { channel="http:url:elpriser_dk_prices:today_min" }
+Number Elpriser_DK_Today_Max     "Today's highest [%.3f DKK/kWh]"  <energy>   (gElpriserDK) { channel="http:url:elpriser_dk_prices:today_max" }
+Number Elpriser_DK_Today_Avg     "Today's average [%.3f DKK/kWh]"  <energy>   (gElpriserDK) { channel="http:url:elpriser_dk_prices:today_avg" }
+String Elpriser_DK_Today_Prices  "Today's prices [%s]"             <energy>   (gElpriserDK) { channel="http:url:elpriser_dk_prices:today_prices" }
+
+Switch Elpriser_DK_Cheap_Now     "Cheap hour now"                  <switch>   (gElpriserDK) { channel="http:url:elpriser_dk_cheap:cheap_now" }
+String Elpriser_DK_Cheap_Hours   "Cheap hours today [%s]"          <time>     (gElpriserDK) { channel="http:url:elpriser_dk_cheap:cheap_hours" }
+Number Elpriser_DK_Cheapest_Hour "Cheapest hour today [%d:00]"     <time>     (gElpriserDK) { channel="http:url:elpriser_dk_cheapest1:cheapest_hour" }
+
+String Elpriser_DK_Tomorrow_Type   "Tomorrow's prices are [%s]"    <calendar> (gElpriserDK) { channel="http:url:elpriser_dk_tomorrow:tomorrow_type" }
+String Elpriser_DK_Tomorrow_Prices "Tomorrow's prices [%s]"        <calendar> (gElpriserDK) { channel="http:url:elpriser_dk_tomorrow:tomorrow_prices" }

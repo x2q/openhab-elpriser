@@ -1,0 +1,16 @@
+{
+  "name": "openhab-elpriser",
+  "version": "0.1.0",
+  "private": true,
+  "description": "elpriser.org electricity prices for openHAB: HTTP binding + JSONPATH / JS transformation package",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/",
+    "test:jsonpath": "sh test/jsonpath/run.sh",
+    "test:live": "sh test/jsonpath/run-live.sh && ELPRISER_LIVE=1 node --test test/live.test.js",
+    "fixtures": "node scripts/gen-fixtures.mjs"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/x2q/openhab-elpriser.git" }
+}

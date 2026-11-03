@@ -5,7 +5,7 @@
   "description": "elpriser.org electricity prices for openHAB: HTTP binding + JSONPATH / JS transformation package",
   "type": "module",
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "test:jsonpath": "sh test/jsonpath/run.sh",
     "test:live": "sh test/jsonpath/run-live.sh && ELPRISER_LIVE=1 node --test test/live.test.js",
     "fixtures": "node scripts/gen-fixtures.mjs"

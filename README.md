@@ -81,7 +81,8 @@ Needs the add-ons **HTTP Binding**, **JSONPath Transformation** and **JavaScript
 How it works: the Thing fetches **one answer per hour** (today, tomorrow once it is published, the forecast days)
 and the channel's `JS(elpriser.js?fn=slots)` turns it into a compact list of one-hour slots with **absolute UTC
 times** (the service speaks in local hours, so the script applies each zone's winter offset and the EU
-daylight-saving rule; no time zone database is needed). The rule runs at every full hour and when the list
+daylight-saving rule; no time zone database is needed). Finland (`fi`) is on Helsinki time (hour 0 = 00:00 Helsinki,
+22:00 UTC in winter), not on the Copenhagen clock of the other Nordic zones; this needs version 0.1.1 or later. The rule runs at every full hour and when the list
 changes: `JS(elpriser.js?fn=summary&cheap=4&horizon=24&run=3&forecast=0)` computes everything for "now", and the
 rule spreads the fields to the items with `JSONPATH($.field)`.
 

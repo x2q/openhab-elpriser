@@ -38,7 +38,8 @@
   };
 
   // ---- time: EU daylight saving, no time zone database ---------------------------------------------------
-  var WINTER = { pt: 0, gb: 0, ie: 0, gr: 2, ro: 2, bg: 2, ee: 2, lv: 2, lt: 2 }; // every other zone: CET
+  // fi: elpriser.org serves Finland in Helsinki days (hour 0 = 00:00 Helsinki), not by the Copenhagen hour
+  var WINTER = { pt: 0, gb: 0, ie: 0, gr: 2, ro: 2, bg: 2, ee: 2, lv: 2, lt: 2, fi: 2 }; // every other zone: CET
   function winterOffset(zone) { return WINTER.hasOwnProperty(zone) ? WINTER[zone] : 1; }
 
   // 01:00 UTC on the last Sunday of the 31-day month m (3 or 10), in unix seconds

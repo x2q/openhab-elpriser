@@ -96,6 +96,23 @@ test('DST sweep 2025-2030 for four zones: every slot on the hour it was publishe
   }
 });
 
+test('fi is on Helsinki time: hour 0 of 2026-11-03 is 22:00Z (ENTSO-E market day starts at 23:00Z = hour 1), summer 21:00Z', () => {
+  assert.equal(tzOf.fi, 'Europe/Helsinki');
+  const day = (date) => ({ date, type: 'actual', prices: Array.from({ length: 24 }, (_, hour) => ({ hour, eur_mwh: hour === 1 ? 5.77 : hour })) });
+  const fi = (date) => JSON.parse(transform({ zone: 'fi', unit: 'EUR/MWh', zoneInfo: { currency: 'EUR', rate: 1 }, days: [day(date)] }, { fn: 'slots' }));
+  const winter = fi('2026-11-03');
+  assert.equal(winter.o, 2);
+  assert.equal(winter.s.length, 24);
+  assert.equal(winter.s[0][0], Date.parse('2026-11-02T22:00:00Z') / 1000);
+  assert.equal(winter.s[1][0], Date.parse('2026-11-02T23:00:00Z') / 1000); // first ENTSO-E market hour
+  assert.equal(winter.s[1][1], 0.00577);
+  assert.equal(winter.s[23][0], Date.parse('2026-11-03T21:00:00Z') / 1000);
+  assert.equal(fi('2026-07-15').s[0][0], Date.parse('2026-07-14T21:00:00Z') / 1000);
+  // Copenhagen zones stay one hour later than Helsinki
+  const dk = JSON.parse(transform({ zone: 'se3', unit: 'EUR/MWh', zoneInfo: { currency: 'EUR', rate: 1 }, days: [day('2026-11-03')] }, { fn: 'slots' }));
+  assert.equal(dk.s[0][0], Date.parse('2026-11-02T23:00:00Z') / 1000);
+});
+
 // --- fn=summary ---------------------------------------------------------------------------------------
 test('summary DK1: price now, next, level and today numbers equal the live API (min 2.209, max 3.0903)', () => {
   const s = summary('dk1_fc');
